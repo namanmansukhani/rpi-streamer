@@ -1,0 +1,13 @@
+__pycache__
+config.py
+.*.swp
+.*.swo
+
+# envs 
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
