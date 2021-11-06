@@ -1,4 +1,6 @@
-async def get_confirmation(msg, member):
+import asyncio
+
+async def get_confirmation(bot, msg, member):
     id = member.id
     valid_reactions = ["✅","❌"]
     for i in valid_reactions:
@@ -21,7 +23,7 @@ async def get_confirmation(msg, member):
         elif str(reaction.emoji) == "❌":
             return False
 
-async def get_response_message(member, channel, valid_responses = None, cooldown = 60):
+async def get_response_message(bot, member, channel, valid_responses = None, cooldown = 60):
     try:
         message = await bot.wait_for(
             'message',

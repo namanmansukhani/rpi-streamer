@@ -17,6 +17,7 @@ from config import creds
 bot = commands.Bot(command_prefix='-')
 bot.streamer = Streamer()
 
+
 @bot.event
 async def on_ready():
     print("rpi-streamer started")
@@ -41,7 +42,20 @@ async def anime(ctx, *, anime):
         embed.add_field(name= f'{i+1}. {anime_names[i]}', value='\u200b')
     
     await ctx.send(embed = embed)
+
+    n = len(anime_names)
+    response_message = await get_response_message(bot, ctx.author, ctx.channel, lambda x: x.isdigit() and 0 < int(x) <= n)
+    selection = int(response_message.content)
+
+    show_link = links[selection-1]
+    num_episodes = await bot.streamer.get_num_episodes(show_link)
+    await ctx.send(f'Choose an episode: 1 to {num_episodes}')
     
+    response_message = await get_response_message(bot, ctx.author, ctx.channel, lambda x: x.isdigit() and 0 < int(x) <= num_episodes)
+    ep_number = int(response_message.content)
+
+    episode_base_link = show_link.replace('/category', '')
+    await ctx.send(f'{episode_base_link}-episode-{ep_number}')
 
 @bot.command()
 async def ne(ctx, url):
