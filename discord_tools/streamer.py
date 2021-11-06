@@ -1,4 +1,6 @@
 import asyncio, aiohttp
+import re
+from bs4 import BeautifulSoup
 
 class Streamer:
     def __init__(self):
