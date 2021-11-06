@@ -6,8 +6,8 @@ class Streamer:
     def __init__(self):
         pass
 
-    async def search_anime(self, query):
-        anime_name = ' '.join(anime_name)
+    async def search_anime(self, anime_name):
+        # anime_name = ' '.join(anime_name)
         og_anime_name = anime_name
         anime_name = r'%20'.join(anime_name.lower().split())
         url = f"https://gogoanime.vc//search.html?keyword={anime_name}"
@@ -29,8 +29,18 @@ class Streamer:
                     release_years = re.findall('Released: (\d{4})', list_elements)
         
         return {
+            'name': og_anime_name,
             'titles' : anime_names,
             'links' : links,
             'image_links' : image_links,
             'release_years' : release_years,
         }
+
+    async def get_num_episodes(self, anime_url):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(anime_url) as response:
+                if response.status == 200:
+                    text = await response.text()
+                    soup = BeautifulSoup(text, 'html.parser')
+                    number_of_episodes = soup.find(id = 'episode_page').find('a')['ep_end']
+                    return int(number_of_episodes)
