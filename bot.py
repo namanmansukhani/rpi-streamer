@@ -63,9 +63,9 @@ async def anime(ctx, *, anime):
     await ctx.send(f'```{json.dumps(details)}```')
 
     print("trying to play the video")
-    bot.session = Streamlink()
-    bot.session.set_option("http-headers", f"Referer={details['referer']}")
-    bot.session.streams(details['manifest'])
+    # bot.session = Streamlink()
+    # bot.session.set_option("http-headers", f"Referer={details['referer']}")
+    # bot.session.streams(details['manifest'])
 
     os.system(f"streamlink --http-headers 'Referer={details['referer']}' {details['manifest']} best")
 
