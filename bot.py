@@ -4,7 +4,7 @@ import os
 import asyncio
 import aiohttp
 import json
-from subprocess import Popen
+import os
 from datetime import datetime
 
 from discord_tools.tools import get_confirmation, get_response_message
@@ -61,6 +61,13 @@ async def anime(ctx, *, anime):
 
     details = await bot.streamer.stream_details(episode_link)
     await ctx.send(f'```{json.dumps(details)}```')
+
+    print("trying to play the video")
+    bot.session = Streamlink()
+    bot.session.set_option("http-headers", f"Referer={details['referer']}")
+    bot.session.streams(details['manifest'])
+
+    os.system(f"streamlink --http-headers 'Referer={details['referer']}' {details['manifest']} best")
 
 @bot.command()
 async def ne(ctx, url):
