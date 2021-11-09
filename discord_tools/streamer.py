@@ -44,3 +44,25 @@ class Streamer:
                     soup = BeautifulSoup(text, 'html.parser')
                     number_of_episodes = soup.find(id = 'episode_page').find('a')['ep_end']
                     return int(number_of_episodes)
+    
+    async def stream_details(self, episode_link):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(episode_link) as response:
+                if response.status == 200:
+                    text = await response.text()
+                    # print(html)
+                    soup = BeautifulSoup(text, 'html.parser')
+                    referer = 'https:' + soup.find("li",class_="vidcdn").a['data-video']
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(referer) as response:
+                if response.status == 200:
+                    text = await response.text()
+                    soup = BeautifulSoup(text, 'html.parser')
+                    js_script = str(soup.find("div", class_="videocontent").script)
+                    manifest = re.findall("file: '(http.*?\.m3u8)'", js_script)[0]
+        
+        return {
+            'referer': referer,
+            'manifest': manifest,
+        }

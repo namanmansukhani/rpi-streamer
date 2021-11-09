@@ -55,7 +55,12 @@ async def anime(ctx, *, anime):
     ep_number = int(response_message.content)
 
     episode_base_link = show_link.replace('/category', '')
-    await ctx.send(f'{episode_base_link}-episode-{ep_number}')
+    episode_link = f'{episode_base_link}-episode-{ep_number}'
+
+    await ctx.send(f'{episode_link}')
+
+    details = await bot.streamer.stream_details(episode_link)
+    await ctx.send(f'```{json.dumps(details)}```')
 
 @bot.command()
 async def ne(ctx, url):
